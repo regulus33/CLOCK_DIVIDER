@@ -9,8 +9,12 @@ public:
 
     Division(int divisor) : divisor(divisor) {}
 
-    static const int PULSE = 1;
-    Buffer buffer = *(new Buffer());
+    static const enum PULSE {
+            ON = 1,
+            OFF = 0,
+    };
+
+    Buffer buffer;
     unsigned int divisor;
     unsigned int pulsing = 0;
 
@@ -20,8 +24,11 @@ public:
         while (!pulseFound && tries) {
             int iterateIndex = buffer.backwardIterate(1);
             int pulse = buffer.getElementAt(iterateIndex);
-            if (pulse) { pulseFound = true; }
             tries--;
+            if (pulse) {
+                pulseFound = true;
+                break;
+            }
         }
 
         return tries;
@@ -46,7 +53,11 @@ public:
             shouldPulse = true;
         }
 
-        if (shouldPulse) { pulsing = pulsing ^ PULSE; }
+        if (shouldPulse) {
+            pulsing = ON;
+        } else {
+            pulsing = OFF;
+        }
         buffer.iterate(pulsing);
     }
 };

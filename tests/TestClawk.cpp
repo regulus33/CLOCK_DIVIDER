@@ -138,7 +138,7 @@ struct FunctionPointerStruct {
 bool FunctionPointerStruct::onPulseCalled = false;
 
 TEST_F(IntegrationTest, integration) {
-    clawk->outputs[0].onPulse = FunctionPointerStruct::onPulse1;
+    clawk->getOutputs()[0].onPulse = FunctionPointerStruct::onPulse1;
     clawk->tick();
     EXPECT_FALSE(FunctionPointerStruct::onPulseCalled);
     clawk->tick();

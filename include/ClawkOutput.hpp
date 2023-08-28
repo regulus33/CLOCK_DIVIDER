@@ -6,18 +6,20 @@ typedef void (*OnPulse)();
 
 class ClawkOutput {
 private:
-    int pulseState = 0;
+    static const int DEFAULT_DIVISION = 2;
 public:
     Division division;
-    /* Timer interrupt -> Clawk.tick() */
-    /* Arduino pins -> ClawkOutput.pulse() */
-    ClawkOutput() : division(Division(2)) {}
+    ClawkOutput() : division(Division(DEFAULT_DIVISION)) {}
     ClawkOutput(Division &division) : division(division) {}
 
     OnPulse onPulse = nullptr;
 
     void pulse(unsigned int pulsing) {
-        if (onPulse != nullptr && pulsing) {  // Check if onPulse is not nullptr
+        /*!
+         * pulsing is 1 when we've passed enough clock signals to hit the division tied to this output
+         * so we call the callback that we want to tick when we hit the division
+         * */
+        if (onPulse != nullptr && pulsing) {
             onPulse();
         }
     }

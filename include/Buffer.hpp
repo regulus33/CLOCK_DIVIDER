@@ -45,7 +45,7 @@ public:
 
     /*! ----- Getters and Setters ----- */
 
-    int (&getData())[16] {
+    int (&getData())[SIZE] {
         return data;
     }
 

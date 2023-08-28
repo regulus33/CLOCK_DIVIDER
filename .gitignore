@@ -1,0 +1,67 @@
+# Compiled Object files
+*.o
+*.so
+*.ko
+*.dll
+*.dylib
+
+# Compiled Dynamic libraries
+*.lib
+*.a
+
+# Compiled Static libraries
+*.la
+*.lo
+
+# Executables
+*.exe
+*.out
+
+# IDE files (e.g., Visual Studio)
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sdf
+*.ncb
+*.vcxproj
+*.vcxproj.filters
+
+# Build files
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+Makefile
+install_manifest.txt
+
+#Build dir
+build/
+cmake-build-debug/
+
+# IDEA
+.idea/
+
+# Package files
+*.tar.*
+*.gz
+*.zip
+*.bz2
+*.7z
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
+*.save
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# googletest directory
+googletest/

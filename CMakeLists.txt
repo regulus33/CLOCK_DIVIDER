@@ -16,6 +16,5 @@ enable_testing()
 add_subdirectory(googletest)
 add_subdirectory(tests)
 
-add_library(Clawk INTERFACE
-        include/OutputInterface.hpp)
+add_library(Clawk INTERFACE)
 target_include_directories(Clawk INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)

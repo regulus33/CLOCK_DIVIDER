@@ -6,6 +6,7 @@
 /* Master orchestrator for clock divider. Connects Divisions to Buffers to Clock Outputs */
 class Clawk {
 public:
+    static const int MAX_OUTPUTS = 7;
     Clawk() {
         for (int i = 0; i < MAX_OUTPUTS; i++) {
             divisions[i] = Division(2);
@@ -16,7 +17,7 @@ public:
     void tick() {
         for (int i = 0; i < MAX_OUTPUTS; i++) {
             divisions[i].evaluate();
-            outputs[i].pulse(divisions[i].pulsing);
+            outputs[i].pulse(divisions[i].buffer.pulsing());
         }
     }
 
@@ -30,8 +31,6 @@ public:
 
 
 private:
-    static const int MAX_OUTPUTS = 7;
     Division divisions[MAX_OUTPUTS];
     ClawkOutput outputs[MAX_OUTPUTS];
-
 };

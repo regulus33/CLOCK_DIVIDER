@@ -1,26 +1,22 @@
 #pragma once
 
 #include "Buffer.hpp"
+#include "constants.hpp"
 
 /*! Division is the data class representing the pulse frequency of a clock output. */
 class Division {
 public:
-    Division() : divisor(1) {}
-
+    Division() : divisor(2) {}
     Division(int divisor) : divisor(divisor) {}
-
-    static const enum PULSE {
-            ON = 1,
-            OFF = 0,
-    };
 
     Buffer buffer;
     unsigned int divisor;
-    unsigned int pulsing = 0;
+//    unsigned int pulsing = 0;
 
     int findLastPulse() {
+        buffer.resetBackwardsIndex();
         bool pulseFound = false;
-        int tries = Buffer::SIZE;
+        int tries = buffer.size;
         while (!pulseFound && tries) {
             int iterateIndex = buffer.backwardIterate(1);
             int pulse = buffer.getElementAt(iterateIndex);
@@ -31,33 +27,41 @@ public:
             }
         }
 
-        return tries;
+        return buffer.getBackWardsIndex();
     }
 
     int calcDistanceFromOneBufferIndexToOther(int subtrahend, int minuend, int size) {
-        int distance = subtrahend - minuend;
-        if (distance < 0) { distance = distance * -1; }
+        int distance;
+        if(subtrahend > minuend) {
+            distance = subtrahend - minuend;
+        } else {
+            int x = size - minuend;
+            distance = x + subtrahend;
+        }
         return distance;
+
+//        if (distance < 0) { distance = distance * -1; }
+//        return distance;
     }
 
     /*!   */
     void evaluate() {
         /*!
-         * call findLastPulse() which returns the index of the pulse backwards from us
-         * if the distance between last index and currentIndex == divisor-1, PULSE
-         * otherwise 0
-         */
-        bool shouldPulse = false;
-        int pulseIndex = findLastPulse();
-        if (calcDistanceFromOneBufferIndexToOther(buffer.getCurrentIndex(), pulseIndex, Buffer::SIZE) == divisor - 1) {
-            shouldPulse = true;
-        }
+         move 1 place forward through the buffer
+         find the index at which the closest ON pulse exists if we traverse backwards through the buffer
 
-        if (shouldPulse) {
+         */
+        int pulsing = OFF;
+        buffer.setData(buffer.getCurrentIndex(), OFF);
+        buffer.iterate();
+        int pulseIndex = findLastPulse();
+        if(buffer.getCurrentElement() == ON) {
             pulsing = ON;
-        } else {
-            pulsing = OFF;
+            buffer.setCurrentPulse(pulsing);
+            return;
+        } else if (calcDistanceFromOneBufferIndexToOther(buffer.getCurrentIndex(), pulseIndex, buffer.size) == divisor) {
+            pulsing = ON;
         }
-        buffer.iterate(pulsing);
+        buffer.setCurrentPulse(pulsing);
     }
 };

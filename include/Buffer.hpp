@@ -1,20 +1,29 @@
 #pragma once
+#include "constants.hpp"
 
 class Buffer {
 public:
     static const int SIZE = 16;
+    int size = SIZE;
 
     int getCurrentElement() const {
         return data[currentIndex];
+    }
+
+    int pulsing() {
+        return data[currentIndex] == ON;
     }
 
     int getElementAt(int index) {
         return data[index];
     }
 
-    void iterate(int pulse) {
+    void iterate() {
         currentIndex = (currentIndex + 1) % SIZE;
-        data[currentIndex] = pulse;
+    }
+
+    void setCurrentPulse(int pulseState) {
+        data[currentIndex] = pulseState;
     }
 
     /*! nudge the backwards index n steps backwards, it wraps */
@@ -35,6 +44,8 @@ public:
                 8 % 5 == 3
                 9 % 5 == 4
                 10 % 5 == 0
+                backwards
+                0 % 5 ==
                 ... and then back to 1 until we hit 4 and then 0
              */
             i = (i - 1 + SIZE) % SIZE;
@@ -57,8 +68,13 @@ public:
         return currentIndex;
     }
 
+    // just for testing
     int getBackWardsIndex() const {
         return backwardsIndex;
+    }
+
+    int resetBackwardsIndex() {
+        backwardsIndex = currentIndex;
     }
 
 private:

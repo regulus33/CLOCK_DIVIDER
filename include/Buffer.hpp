@@ -3,15 +3,20 @@
 
 class Buffer {
 public:
-    static const int SIZE = 16;
-    int size = SIZE;
+    static const int MAX = 32;
+
+    Buffer(int division = 2, int length = 2) : division(division), length(length) {
+        for(int i = 0; i < MAX; i++) {
+            data[i] = defaultData[i];
+        }
+    }
+
+    bool pulsing() {
+        return getCurrentElement() == ON;
+    }
 
     int getCurrentElement() const {
         return data[currentIndex];
-    }
-
-    int pulsing() {
-        return data[currentIndex] == ON;
     }
 
     int getElementAt(int index) {
@@ -19,7 +24,7 @@ public:
     }
 
     void iterate() {
-        currentIndex = (currentIndex + 1) % SIZE;
+        currentIndex = (currentIndex + 1) % length;
     }
 
     void setCurrentPulse(int pulseState) {
@@ -28,35 +33,15 @@ public:
 
     /*! nudge the backwards index n steps backwards, it wraps */
     int backwardIterate(int steps) {
-        int i = backwardsIndex;
         for (int count = 0; count < steps; ++count) {
-            /*! modulo always returns the 0 if left of operand is evenly divisible by right side otherwise it returns
-                the remainder 15 % 5 = 0 but 15 % 6 is 3. This allows us to create a boundary around any incrementally
-                bumped numbers. Because, every time you increment until you hit a multiple of 5, like 25 30 etc, you go
-                back to 0.
-                1 % 5 == 1
-                2 % 5 == 2
-                3 % 5 == 3
-                4 % 5 == 4
-                5 % 5 == 0
-                6 % 5 == 1
-                7 % 5 == 2
-                8 % 5 == 3
-                9 % 5 == 4
-                10 % 5 == 0
-                backwards
-                0 % 5 ==
-                ... and then back to 1 until we hit 4 and then 0
-             */
-            i = (i - 1 + SIZE) % SIZE;
+            currentIndex = (currentIndex - 1 + length) % length;
         }
-        backwardsIndex = i;
-        return i;
+        return currentIndex;
     }
 
     /*! ----- Getters and Setters ----- */
 
-    int (&getData())[SIZE] {
+    int* getData() {
         return data;
     }
 
@@ -68,17 +53,18 @@ public:
         return currentIndex;
     }
 
-    // just for testing
-    int getBackWardsIndex() const {
-        return backwardsIndex;
+    int getLength() {
+        return length;
     }
 
-    int resetBackwardsIndex() {
-        backwardsIndex = currentIndex;
+    void changeDivision(int div) {
+
     }
 
 private:
-    int data[SIZE]{0};
+    int defaultData[MAX] = { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+    int data[MAX] = {0};
     int currentIndex = 0;
-    int backwardsIndex = 0;
+    int length = 2;
+    int division;
 };

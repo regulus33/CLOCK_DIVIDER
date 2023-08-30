@@ -1,26 +1,24 @@
 #pragma once
 
-#include "Division.hpp"
-
 typedef void (*OnPulse)();
 
 class ClawkOutput {
 private:
     static const int DEFAULT_DIVISION = 2;
 public:
-    Division division;
-    ClawkOutput() : division(Division(DEFAULT_DIVISION)) {}
-    ClawkOutput(Division &division) : division(division) {}
+    Buffer* buffer = nullptr;
+    ClawkOutput() {
+        buffer = new Buffer(2,2);
+    }
+    ~ClawkOutput() { delete buffer; }
+//    ClawkOutput(Buffer* buffer) : buffer(buffer) {}
 
     OnPulse onPulse = nullptr;
 
-    void pulse(unsigned int pulsing) {
-        /*!
-         * pulsing is 1 when we've passed enough clock signals to hit the division tied to this output
-         * so we call the callback that we want to tick when we hit the division
-         * */
-        if (onPulse != nullptr && pulsing) {
+    void progress() {
+        if (onPulse != nullptr && buffer->pulsing()) {
             onPulse();
         }
+        buffer->iterate();
     }
 };

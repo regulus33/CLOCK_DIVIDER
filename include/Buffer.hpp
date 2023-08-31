@@ -1,11 +1,12 @@
-#pragma once
+#ifndef CLAWK_BUFFER_HPP
+#define CLAWK_BUFFER_HPP
 #include "constants.hpp"
 
 class Buffer {
 public:
-    static const int MAX = 32;
+    static const int MAX = 128;
 
-    Buffer(int division = 2, int length = 2) : division(division), length(length) {
+    Buffer(int length = 2) : length(length) {
         for(int i = 0; i < MAX; i++) {
             data[i] = defaultData[i];
         }
@@ -58,13 +59,18 @@ public:
     }
 
     void changeDivision(int div) {
+        length = div;
+    }
 
+    int getDivision() {
+        return length;
     }
 
 private:
-    int defaultData[MAX] = { 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+    int defaultData[MAX] = {1};
     int data[MAX] = {0};
     int currentIndex = 0;
     int length = 2;
-    int division;
 };
+
+#endif //CLAWK_BUFFER_HPP

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CLAWK_CLAWK_OUTPUT_HPP
+#define CLAWK_CLAWK_OUTPUT_HPP
 
 typedef void (*OnPulse)();
 
@@ -8,17 +9,21 @@ private:
 public:
     Buffer* buffer = nullptr;
     ClawkOutput() {
-        buffer = new Buffer(2,2);
+        buffer = new Buffer(2);
     }
     ~ClawkOutput() { delete buffer; }
 //    ClawkOutput(Buffer* buffer) : buffer(buffer) {}
 
     OnPulse onPulse = nullptr;
 
-    void progress() {
+    bool progress() {
+        bool pulsing = buffer->pulsing();
         if (onPulse != nullptr && buffer->pulsing()) {
             onPulse();
         }
         buffer->iterate();
+        return pulsing;
     }
 };
+
+#endif

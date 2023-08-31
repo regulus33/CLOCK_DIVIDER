@@ -1,54 +1,37 @@
 #include "../include/Buffer.hpp"
 #include "../include/ClawkOutput.hpp"
-#include <iostream>
 #include <gtest/gtest.h>
 #include <random>
+#include <functional>
+#include "testOnPulseFunction.hpp"
+#include "TestAllDivisions.hpp"
+#include "TestClawk.hpp"
 
-bool onPulseCalled = false;
 
-struct FunctionPointerStruct {
-    static void onPulse1() {
-        onPulseCalled = true;
+
+TEST_P(TestAllDivisions, TestName) {
+    int length = GetParam();
+    Buffer buffer = Buffer(length);
+    for(int i = 0; i < 128; i++) {
+        if(i % length == 0) {
+            EXPECT_TRUE(buffer.pulsing());
+        } else {
+            EXPECT_FALSE(buffer.pulsing());
+        }
+        buffer.iterate();
     }
-};
+}
 
-struct TestClawk : public ::testing::Test {
-    Buffer *buffer = nullptr;
-    ClawkOutput *clawkOutput = nullptr;
+INSTANTIATE_TEST_SUITE_P(TestClawk, TestAllDivisions, ::testing::ValuesIn(my_vector));
 
-    Buffer &GetBuffer() const {
-        return *buffer;
-    }
-
-    ClawkOutput &GetClockOutput() {
-        return *clawkOutput;
-    }
-
-    void SetUp() override  // Note the capital 'U'
-    {
-        buffer = new Buffer;
-        clawkOutput = new ClawkOutput;
-        onPulseCalled = false;
-    }
-
-    void TearDown() override  // Note the capital 'D'
-    {
-        delete buffer;
-        delete clawkOutput;
-        onPulseCalled = false;
-    }
-};
-
-
-TEST_F(TestClawk, iterate) {
+TEST_F(TestClawk, buffer_dot_iterate) {
     buffer->setData(3, 1);
     for (int i = 0; i < 3; i++) {
         buffer->iterate();
     }
 }
 
-
-TEST_F(TestClawk, backwardsIterate) {
+TEST_F(TestClawk, buffer_dot_backwardsIterate) {
     int expected = buffer->getLength() - 1;
     /*! it returns the value of the backwardsIndex */
     EXPECT_EQ(expected, buffer->backwardIterate(1));
@@ -60,11 +43,13 @@ TEST_F(TestClawk, backwardsIterate) {
     EXPECT_EQ(nextExpected, buffer->getCurrentIndex());
 }
 
-TEST_F(TestClawk, changeDivision) {
+TEST_F(TestClawk, buffer_dot_changeDivision) {
 
 }
 
-TEST_F(TestClawk, getElementAt) {
+
+
+TEST_F(TestClawk, buffer_dot_getElementAt) {
     int upPulse = 1;
     buffer->setData(0, upPulse);
     int pulseItem = buffer->getData()[0];
@@ -72,7 +57,7 @@ TEST_F(TestClawk, getElementAt) {
     EXPECT_EQ(pulseItem, upPulse) << "pulseItem: " << pulseItem;
 }
 
-TEST_F(TestClawk, progress) {
+TEST_F(TestClawk, buffer_iterate_method_makes_buffer_pulsing_true_every_other_step) {
     for(int i = 0; i < 2048; i++) {
         if(i % 2 == 0) {
             EXPECT_EQ(buffer->pulsing(), true);
@@ -83,20 +68,19 @@ TEST_F(TestClawk, progress) {
     }
 }
 
+TEST_F(TestClawk, buffer_iterate_with_various_divisions) {
+    TestPulseForClockDivision(2, [](bool pulsing, Buffer* buffer, ClawkOutput* clawkOutput) -> bool {
+        return buffer->pulsing() == pulsing;
+    });
+}
 
-
-//
-///*! INTEGRATION TESTS */
-//
-
-
-TEST_F(TestClawk, callback) {
-    GetClockOutput().onPulse = FunctionPointerStruct::onPulse1;
-    GetClockOutput().progress();
+TEST_F(TestClawk, clock_output_calls_function_pointer_set_as_onPulse) {
+    clawkOutput->onPulse = onPulse1;
+    clawkOutput->progress();
     EXPECT_EQ(onPulseCalled, true);
     onPulseCalled = false;
-    GetClockOutput().progress();
+    clawkOutput->progress();
     EXPECT_EQ(onPulseCalled, false);
-    GetClockOutput().progress();
+    clawkOutput->progress();
     EXPECT_EQ(onPulseCalled, true);
 }

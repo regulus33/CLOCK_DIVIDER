@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 #include "Buffer.hpp"
-#include "ClawkOutput.hpp"
+#include "Output.hpp"
 #include "testOnPulseFunction.hpp"
 
 class TestAllDivisions : public ::testing::TestWithParam<int> {};

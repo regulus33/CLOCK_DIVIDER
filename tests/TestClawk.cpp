@@ -1,5 +1,5 @@
 #include "../include/Buffer.hpp"
-#include "../include/ClawkOutput.hpp"
+#include "../include/Output.hpp"
 #include <gtest/gtest.h>
 #include <random>
 #include <functional>
@@ -9,7 +9,7 @@
 
 
 
-TEST_P(TestAllDivisions, TestName) {
+TEST_P(TestAllDivisions, buffer_dot_pulsing) {
     int length = GetParam();
     Buffer buffer = Buffer(length);
     for(int i = 0; i < 128; i++) {
@@ -43,12 +43,6 @@ TEST_F(TestClawk, buffer_dot_backwardsIterate) {
     EXPECT_EQ(nextExpected, buffer->getCurrentIndex());
 }
 
-TEST_F(TestClawk, buffer_dot_changeDivision) {
-
-}
-
-
-
 TEST_F(TestClawk, buffer_dot_getElementAt) {
     int upPulse = 1;
     buffer->setData(0, upPulse);
@@ -69,7 +63,7 @@ TEST_F(TestClawk, buffer_iterate_method_makes_buffer_pulsing_true_every_other_st
 }
 
 TEST_F(TestClawk, buffer_iterate_with_various_divisions) {
-    TestPulseForClockDivision(2, [](bool pulsing, Buffer* buffer, ClawkOutput* clawkOutput) -> bool {
+    TestPulseForClockDivision(2, [](bool pulsing, Buffer* buffer, Output* clawkOutput) -> bool {
         return buffer->pulsing() == pulsing;
     });
 }

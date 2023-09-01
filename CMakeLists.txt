@@ -19,5 +19,6 @@ add_subdirectory(tests)
 add_library(Clawk INTERFACE
         include/TestAllDivisions.hpp
         include/testOnPulseFunction.hpp
-        include/TestClawk.hpp)
+        include/TestClawk.hpp
+        include/Clawk.hpp)
 target_include_directories(Clawk INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)

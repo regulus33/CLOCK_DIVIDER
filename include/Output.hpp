@@ -3,15 +3,15 @@
 
 typedef void (*OnPulse)();
 
-class ClawkOutput {
+class Output {
 private:
     static const int DEFAULT_DIVISION = 2;
 public:
     Buffer* buffer = nullptr;
-    ClawkOutput() {
+    Output() {
         buffer = new Buffer(2);
     }
-    ~ClawkOutput() { delete buffer; }
+    ~Output() { delete buffer; }
 //    ClawkOutput(Buffer* buffer) : buffer(buffer) {}
 
     OnPulse onPulse = nullptr;

@@ -17,6 +17,9 @@ struct TestClawk : public ::testing::Test {
         buffer = new Buffer;
         clawkOutput = new Output;
         onPulseCalled = false;
+        onpC1 = false;
+        onpC2 = false;
+        onpC3 = false;
     }
 
     void TearDown() override  // Note the capital 'D'
@@ -24,6 +27,9 @@ struct TestClawk : public ::testing::Test {
         delete buffer;
         delete clawkOutput;
         onPulseCalled = false;
+        onpC1 = false;
+        onpC2 = false;
+        onpC3 = false;
     }
 
     void testBufferIterate(int times, int division, int expectedIndex) {
@@ -33,6 +39,18 @@ struct TestClawk : public ::testing::Test {
         }
 
         EXPECT_EQ(buffer->getCurrentIndex(), expectedIndex);
+    }
+
+    void testOnCallbacksFalse() {
+        EXPECT_FALSE(onpC1);
+        EXPECT_FALSE(onpC2);
+        EXPECT_FALSE(onpC3);
+    }
+
+    void testOnCallbacksTrue() {
+        EXPECT_TRUE(onpC1);
+        EXPECT_TRUE(onpC2);
+        EXPECT_TRUE(onpC3);
     }
 
     bool checkForBufferInstance(Buffer* pointer) {

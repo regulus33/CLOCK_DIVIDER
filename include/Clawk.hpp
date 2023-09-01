@@ -26,6 +26,12 @@ public:
         return *(outputs[index]);
     }
 
+    void tick() {
+        for(int i = 0; i < numOutputs; i++) {
+            outputs[i]->progress();
+        }
+    }
+
     ~Clawk() {
         for (int i = 0; i < numOutputs; i++) {
             delete outputs[i];

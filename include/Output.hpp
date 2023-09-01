@@ -17,11 +17,15 @@ public:
 
     bool progress() {
         bool pulsing = buffer->pulsing();
-        if (onPulse != nullptr && buffer->pulsing()) {
+        if (onPulse != nullptr && pulsing) {
             onPulse();
         }
         buffer->iterate();
         return pulsing;
+    }
+
+    void changeDivision(int division) {
+        buffer->changeDivision(division);
     }
 };
 

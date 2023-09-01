@@ -9,15 +9,28 @@
 #include "Clawk.hpp"
 
 
+TEST_F(TestClawk, basic) {
+    Clawk clawwk = Clawk(3);
+    clawwk.getOutPut(0).onPulse = onpC1P;
+    clawwk.getOutPut(1).onPulse = onpC2P;
+    clawwk.getOutPut(2).onPulse = onpC3P;
+
+    for (int i = 0; i < 3; i++) {
+        clawwk.getOutPut(i).changeDivision(2);
+    }
+    testOnCallbacksFalse();
+    clawwk.tick();
+    testOnCallbacksTrue();
+}
 /*!
     Checks that Clawk's pointers to Outputs work and Outputs pointers to Buffer work
 */
 TEST_F(TestClawk, pointers) {
     Clawk clawwk = Clawk(7);
-    for(int i=0; i < 7; i++) {
+    for (int i = 0; i < 7; i++) {
         EXPECT_TRUE(clawwk.getOutputs()[i] != nullptr);
         EXPECT_TRUE(checkForOutputInstance(clawwk.getOutputs()[i]));
-        Buffer* buffer = clawwk.getOutputs()[i]->buffer;
+        Buffer *buffer = clawwk.getOutputs()[i]->buffer;
         EXPECT_TRUE(checkForBufferInstance(buffer));
     }
     /*!
@@ -36,8 +49,8 @@ TEST_F(TestClawk, pointers) {
 TEST_P(TestAllDivisions, buffer_dot_pulsing) {
     int length = GetParam();
     Buffer buffer = Buffer(length);
-    for(int i = 0; i < 128; i++) {
-        if(i % length == 0) {
+    for (int i = 0; i < 128; i++) {
+        if (i % length == 0) {
             EXPECT_TRUE(buffer.pulsing());
         } else {
             EXPECT_FALSE(buffer.pulsing());
@@ -92,8 +105,8 @@ TEST_F(TestClawk, buffer_dot_getElementAt) {
 }
 
 TEST_F(TestClawk, buffer_iterate_method_makes_buffer_pulsing_true_every_other_step) {
-    for(int i = 0; i < 2048; i++) {
-        if(i % 2 == 0) {
+    for (int i = 0; i < 2048; i++) {
+        if (i % 2 == 0) {
             EXPECT_EQ(buffer->pulsing(), true);
         } else {
             EXPECT_EQ(buffer->pulsing(), false);
@@ -103,7 +116,7 @@ TEST_F(TestClawk, buffer_iterate_method_makes_buffer_pulsing_true_every_other_st
 }
 
 TEST_F(TestClawk, buffer_iterate_with_various_divisions) {
-    TestPulseForClockDivision(2, [](bool pulsing, Buffer* buffer, Output* clawkOutput) -> bool {
+    TestPulseForClockDivision(2, [](bool pulsing, Buffer *buffer, Output *clawkOutput) -> bool {
         return buffer->pulsing() == pulsing;
     });
 }

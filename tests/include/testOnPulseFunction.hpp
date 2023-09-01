@@ -12,7 +12,24 @@ bool onPulseCalled = false;
 static void onPulse1() {
     onPulseCalled = true;
 }
+/*!
+    For clawk test, we need to test multiple outputs from tick() at once.*
+ */
+bool onpC1 = false;
+static void onpC1P() {
+    onpC1 = true;
+}
 
+bool onpC2 = false;
+static void onpC2P() {
+    onpC2 = true;
+}
+
+bool onpC3 = false;
+static void onpC3P() {
+    onpC3 = true;
+}
+/* ------------------------------------------------------------------- */
 std::vector<int> buildDynamicArray() {
     std::vector<int> my_vector;
     for (int i = 2; i <= Buffer::MAX; ++i) {  // Replace this loop with your dynamic logic.

@@ -3,9 +3,9 @@
 #include <gtest/gtest.h>
 #include <random>
 #include <functional>
-#include "testOnPulseFunction.hpp"
-#include "TestAllDivisions.hpp"
-#include "TestClawk.hpp"
+#include "include/testOnPulseFunction.hpp"
+#include "include/TestAllDivisions.hpp"
+#include "include/TestClawk.hpp"
 
 
 

@@ -60,6 +60,7 @@ public:
 
     void changeDivision(int div) {
         length = div;
+        currentIndex = 0;
     }
 
     int getDivision() {

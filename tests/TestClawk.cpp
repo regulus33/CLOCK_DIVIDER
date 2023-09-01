@@ -6,9 +6,33 @@
 #include "include/testOnPulseFunction.hpp"
 #include "include/TestAllDivisions.hpp"
 #include "include/TestClawk.hpp"
+#include "Clawk.hpp"
 
 
+/*!
+    Checks that Clawk's pointers to Outputs work and Outputs pointers to Buffer work
+*/
+TEST_F(TestClawk, pointers) {
+    Clawk clawwk = Clawk(7);
+    for(int i=0; i < 7; i++) {
+        EXPECT_TRUE(clawwk.getOutputs()[i] != nullptr);
+        EXPECT_TRUE(checkForOutputInstance(clawwk.getOutputs()[i]));
+        Buffer* buffer = clawwk.getOutputs()[i]->buffer;
+        EXPECT_TRUE(checkForBufferInstance(buffer));
+    }
+    /*!
+     *
+     * If you were to check as high as outputs[65] you'd still get a pointer to Buffer.
+     * No idea where or why it cuts off. But pointers are just integers in base 16 format...
+     * I think this is just some built in default of how cpp will initialize an undefined length array of pointers...
+     *
+     * */
+    EXPECT_FALSE(checkForOutputInstance(clawwk.getOutputs()[1000]));
+}
 
+/*!
+    Checks every possible clock division up to 128 will make Buffer be in "pulsing" state appropriately.
+*/
 TEST_P(TestAllDivisions, buffer_dot_pulsing) {
     int length = GetParam();
     Buffer buffer = Buffer(length);
@@ -21,14 +45,30 @@ TEST_P(TestAllDivisions, buffer_dot_pulsing) {
         buffer.iterate();
     }
 }
-
+/*! see above */
 INSTANTIATE_TEST_SUITE_P(TestClawk, TestAllDivisions, ::testing::ValuesIn(my_vector));
 
+/*!
+ *  Checks that iterate advances buffer index and wraps around at end of buffer.
+ */
 TEST_F(TestClawk, buffer_dot_iterate) {
-    buffer->setData(3, 1);
-    for (int i = 0; i < 3; i++) {
-        buffer->iterate();
-    }
+    /*!
+     Division 1
+     */
+    testBufferIterate(1, 1, 0);
+    testBufferIterate(2, 1, 0);
+    /*!
+     Division 2
+     */
+    testBufferIterate(1, 2, 1);
+    testBufferIterate(2, 2, 0);
+    /*!
+    Division 3
+    */
+    testBufferIterate(3, 3, 0);
+    testBufferIterate(4, 3, 1);
+    testBufferIterate(5, 3, 2);
+    testBufferIterate(6, 3, 0);
 }
 
 TEST_F(TestClawk, buffer_dot_backwardsIterate) {

@@ -26,6 +26,29 @@ struct TestClawk : public ::testing::Test {
         onPulseCalled = false;
     }
 
+    void testBufferIterate(int times, int division, int expectedIndex) {
+        buffer->changeDivision(division);
+        for (int i = 0; i < times; i++) {
+            buffer->iterate();
+        }
+
+        EXPECT_EQ(buffer->getCurrentIndex(), expectedIndex);
+    }
+
+    bool checkForBufferInstance(Buffer* pointer) {
+        if (Buffer* bufferPointer = dynamic_cast<Buffer*>(pointer)) {
+            return true;
+        }
+        return false;
+    }
+
+    bool checkForOutputInstance(Output* pointer) {
+        if (Output* outPutPointer = dynamic_cast<Output*>(pointer)) {
+            return true;
+        }
+        return false;
+    }
+
     void TestPulseForClockDivision(int division, std::function<bool(bool, Buffer*, Output*)> pulsing) {
         for(int i = 0; i < 32; i++) {
             if(i % division == 0) {

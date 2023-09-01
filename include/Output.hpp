@@ -12,7 +12,6 @@ public:
         buffer = new Buffer(2);
     }
     ~Output() { delete buffer; }
-//    ClawkOutput(Buffer* buffer) : buffer(buffer) {}
 
     OnPulse onPulse = nullptr;
 

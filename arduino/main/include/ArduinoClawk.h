@@ -2,11 +2,13 @@
 // Created by zack on 9/1/23.
 //
 
+#ifndef CLAWK_CLAWK_HPP
+#define CLAWK_CLAWK_HPP
 #ifdef ARDUINO
 #include "ArduinoOutput.h"
 #else
 #include "Output.hpp"
-#endif
+#endif // ARDUINO
 
 class Clawk {
 private:
@@ -43,3 +45,4 @@ public:
     }
 };
 
+#endif //CLAWK_CLAWK_HPP

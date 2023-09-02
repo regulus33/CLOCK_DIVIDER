@@ -1,13 +1,16 @@
+//
+// Created by zack on 9/1/23.
+//
+
+#ifndef CLAWK_CLAWK_OUTPUT_HPP
+#define CLAWK_CLAWK_OUTPUT_HPP
+
 #ifdef ARDUINO
 #include "ArduinoBuffer.h"
 #else
 #include "Buffer.hpp"
-#endif
+#endif //ARDUINO
 
-#ifndef CLAWK_OUTPUT_HPP
-#define CLAWK_OUTPUT_HPP
-
-#include "Buffer.hpp"
 typedef void (*OnPulse)();
 
 class Output {
@@ -35,3 +38,5 @@ public:
         buffer->changeDivision(division);
     }
 };
+
+#endif //CLAWK_CLAWK_OUTPUT_HPP

@@ -14,7 +14,7 @@ class Buffer {
 public:
     static const int MAX = 128;
 
-    Buffer(int length = 2) : length(length) {
+    explicit Buffer(int length = 2) : length(length) {
         for(int i = 0; i < MAX; i++) {
             data[i] = defaultData[i];
         }

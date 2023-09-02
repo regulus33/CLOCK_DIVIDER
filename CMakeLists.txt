@@ -26,7 +26,8 @@ target_include_directories(Clawk INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(ARDUINO_PREFIX "Arduino")
 # Find all hpp files in include directory and set them as HPP_FILES
 file(GLOB ORIGINAL_INCLUDES "${CMAKE_SOURCE_DIR}/include/*.hpp")
-set(ARDUINO_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/arduino/main/include/")
+#set(ARDUINO_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/arduino/main/include/")
+set(ARDUINO_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/arduino/clock_divider/include/")
 # For hpp_file in hpp_files
 foreach(ORIGINAL_INCLUDE ${ORIGINAL_INCLUDES})
     # Get the file name without the full path or extension

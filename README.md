@@ -1,3 +1,35 @@
+## Preprocessor directives
+We need them to deal with the fact that we are copying files and renaming
+them between 
+
+
+`/include` and `arduino/main/include`
+
+`MACROS` at least in the `#ifndef` statements are these big empty variable things. 
+
+They are literally there just to prevent double includes...
+
+Here's how we would do it if we wanted to not redefine the same thing over and over
+AND we wanted different things to happen in diferent environments. **YOU CAN NEST:**
+
+```cpp
+#ifdef ARDUINO
+    #ifndef ARDUINO_CLAWK_BUFFER_H
+    #define ARDUINO_CLAWK_BUFFER_H
+
+    // BUT SERIOUSLY DON'T DO THIS
+
+    #endif // ARDUINO_CLAWK_BUFFER_H
+#else
+    #ifndef CLAWK_BUFFER_HPP
+    #define CLAWK_BUFFER_HPP
+
+    // BETTER TO JUST HAVE ONE MACRO FOR THIS KIND OF PREPROCESSOR DIRECTIVE
+
+    #endif // CLAWK_BUFFER_HPP
+#endif
+```
+
 ## This project uses gtest
 
 It expects to have on the project root a directory called `googletest`

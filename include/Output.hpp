@@ -1,6 +1,16 @@
+//
+// Created by zack on 9/1/23.
+//
+
 #ifndef CLAWK_CLAWK_OUTPUT_HPP
 #define CLAWK_CLAWK_OUTPUT_HPP
+
+#ifdef ARDUINO
+#include "ArduinoBuffer.h"
+#else
 #include "Buffer.hpp"
+#endif //ARDUINO
+
 typedef void (*OnPulse)();
 
 class Output {
@@ -29,4 +39,4 @@ public:
     }
 };
 
-#endif
+#endif //CLAWK_CLAWK_OUTPUT_HPP

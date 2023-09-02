@@ -1,7 +1,8 @@
-#include "include/Clawk.hpp"
+#include "include/ArduinoClawk.h"
 
 void setup() {
     // Your setup code here
+
 }
 
 void loop() {

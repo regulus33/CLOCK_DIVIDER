@@ -1,6 +1,14 @@
+//
+// Created by zack on 9/1/23.
+//
+
 #ifndef CLAWK_BUFFER_HPP
 #define CLAWK_BUFFER_HPP
-#include "constants.hpp"
+#ifdef ARDUINO
+#include "ArduinoConstants.h"
+#else
+#include "Constants.hpp"
+#endif //ARDUINO
 
 class Buffer {
 public:

@@ -40,7 +40,7 @@ TEST_F(TestClawk, pointers) {
      * I think this is just some built in default of how cpp will initialize an undefined length array of pointers...
      *
      * */
-    EXPECT_FALSE(checkForOutputInstance(clawwk.getOutputs()[1000]));
+    EXPECT_FALSE(checkForOutputInstance(clawwk.getOutputs()[10000]));
 }
 
 /*!
@@ -58,6 +58,7 @@ TEST_P(TestAllDivisions, buffer_dot_pulsing) {
         buffer.iterate();
     }
 }
+
 /*! see above */
 INSTANTIATE_TEST_SUITE_P(TestClawk, TestAllDivisions, ::testing::ValuesIn(my_vector));
 

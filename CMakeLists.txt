@@ -22,3 +22,5 @@ add_library(Clawk INTERFACE
         tests/include/TestClawk.hpp
         include/Clawk.hpp)
 target_include_directories(Clawk INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+file(COPY ${CMAKE_SOURCE_DIR}/include/ DESTINATION ${CMAKE_SOURCE_DIR}/arduino/include/)

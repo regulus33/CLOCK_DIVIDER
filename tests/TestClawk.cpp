@@ -18,6 +18,7 @@ TEST_F(TestClawk, basic) {
     for (int i = 0; i < 3; i++) {
         clawwk.getOutPut(i).changeDivision(2);
     }
+
     testOnCallbacksFalse();
     clawwk.tick();
     testOnCallbacksTrue();

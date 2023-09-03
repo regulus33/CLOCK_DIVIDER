@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "ArduinoClawk.h"
+#include "OledDisplayService.h"
 /*
   Blink
 
@@ -24,8 +25,10 @@
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink
 */
 Clawk c = Clawk(1);
+OledDisplayService display;
 // the setup function runs once when you press reset or power the board
 void setup() {
+    display.displayText("Hello world!", 0, 0);
     // initialize digital pin LED_BUILTIN as an output.
     pinMode(LED_BUILTIN, OUTPUT);
 }
@@ -34,7 +37,9 @@ void setup() {
 void loop() {
     c.tick();
     digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-    delay(10);                      // wait for a second
+    delay(500);
+    display.displayText("Hello world!", 0, 0);// wait for a second
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
-    delay(10);                      // wait for a second
+    delay(500);                      // wait for a second
+    display.displayText("Hello back!", 0, 0);// wait for a second
 }

@@ -5,6 +5,7 @@
 #include "unity.h"
 #include "ArduinoClawk.h"
 #include "Arduino.h"
+#include "OledDisplayService.h"
 
 void setUp(void) {
     // set stuff up here
@@ -12,6 +13,12 @@ void setUp(void) {
 
 void tearDown(void) {
     // clean stuff up here
+}
+
+void test_OledDisplayServe_displayTest(void) {
+    OledDisplayService display;
+    display.displayText("Hello world!", 0, 0);
+    delay(100);
 }
 
 void test_ArduinoClawk_functionality(void) {
@@ -22,17 +29,9 @@ void test_ArduinoClawk_functionality(void) {
 
 int runUnityTests(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_ArduinoClawk_functionality);
+//    RUN_TEST(test_ArduinoClawk_functionality);
+    RUN_TEST(test_OledDisplayServe_displayTest);
     return UNITY_END();
-}
-
-// WARNING!!! PLEASE REMOVE UNNECESSARY MAIN IMPLEMENTATIONS //
-
-/**
-  * For native dev-platform or for some embedded frameworks
-  */
-int main(void) {
-    return runUnityTests();
 }
 
 /**
@@ -47,9 +46,21 @@ void setup() {
 }
 void loop() {}
 
+
+// UNCOMMENT 1 of the following for platforms other than Arduino //
+
+/**
+  * For native dev-platform or for some embedded frameworks
+  * --- The main function and app_main would be for other platforms ESP etc. ---
+  */
+
+//int main(void) {
+//    return runUnityTests();
+//}
+
 /**
   * For ESP-IDF framework
   */
-void app_main() {
-    runUnityTests();
-}
+//void app_main() {
+//    runUnityTests();
+//}

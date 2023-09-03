@@ -15,22 +15,29 @@ void tearDown(void) {
     // clean stuff up here
 }
 
-void test_OledDisplayServe_displayTest(void) {
-    OledDisplayService display;
-    display.displayText("Hello world!", 0, 0);
-    delay(100);
+//void test_OledDisplayServe_displayTest(void) {
+////    OledDisplayService display;
+////    display.displayText("Hello world!", 0, 0);
+////    delay(100);
+//}
+//
+//void test_ArduinoClawk_functionality(void) {
+//    Clawk c = Clawk(1);
+//    c.tick();
+//    TEST_ASSERT_EQUAL(0, c.getOutPut(0).buffer->pulsing());
+//}
+
+void test_EncoderKnobService_counter() {
+    exp
 }
 
-void test_ArduinoClawk_functionality(void) {
-    Clawk c = Clawk(1);
-    c.tick();
-    TEST_ASSERT_EQUAL(0, c.getOutPut(0).buffer->pulsing());
-}
+
 
 int runUnityTests(void) {
     UNITY_BEGIN();
+    RUN_TEST(test_EncoderKnobService_counter);
 //    RUN_TEST(test_ArduinoClawk_functionality);
-    RUN_TEST(test_OledDisplayServe_displayTest);
+//    RUN_TEST(test_OledDisplayServe_displayTest);
     return UNITY_END();
 }
 

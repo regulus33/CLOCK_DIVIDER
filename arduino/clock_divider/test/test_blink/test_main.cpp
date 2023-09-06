@@ -28,7 +28,6 @@ void tearDown(void) {
 //}
 
 void test_EncoderKnobService_counter() {
-    exp
 }
 
 

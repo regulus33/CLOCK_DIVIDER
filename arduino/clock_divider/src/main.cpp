@@ -1,15 +1,18 @@
 #include <Arduino.h>
-#include "ArduinoLedEncoder.h"
+#include "physical/IlluminatedEncoder.h"
+#include "physical/OledDisplay.h"
+#include "util/TestSequence.h"
+#include "util/Macros.h"
 
 
-ArduinoLedEncoder encoder;
 
 void setup() {
-    encoder.setup();
-}
 
+#ifdef DEBUG
+    TestSequence::run();
+#endif
+
+}
 void loop() {
-    encoder.colorCycle();
-    encoder.read_encoder();
-}
 
+}

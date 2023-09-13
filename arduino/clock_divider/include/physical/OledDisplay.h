@@ -28,11 +28,16 @@ public:
 
     void setup() {
         if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-            Serial.println(F("SSD1306 allocation failed"));
             for(;;);
         }
         clear();
         display.display();
+    }
+
+    void printLine(int value) {
+        char buffer[4];  // make sure this is large enough to hold all digits and null terminator;
+        itoa(value, buffer, 10);
+        printLine(buffer);
     }
 
     void printLine(const char* value){
@@ -47,6 +52,7 @@ public:
         /*! Calculate the position to start the text to make it centered */
         int x = (width - w) / 2;
         int y = (height - h) / 2;
+
         /*! Clear the display, set the cursor position, and then print the text */
         display.setTextSize(TEXT_SIZE); // Draw 2X-scale text
         display.setTextColor(WHITE);
@@ -58,9 +64,10 @@ public:
 
     void hardwareTest() {
         clear();
-        printLine("This is TEXT");
-        delay(2000);
+        printLine("Clawk");
+        delay(500);
         drawSplashCircles();
+        printLine(255);
     }
 
     void clear() {
@@ -77,7 +84,7 @@ private:
             delay(1);
         }
 
-        delay(2000);
+        delay(500);
 
         display.clearDisplay();
 
@@ -88,7 +95,7 @@ private:
             delay(1);
         }
 
-        delay(2000);
+        delay(500);
     }
 };
 

@@ -63,10 +63,6 @@ public:
         int8_t reading = enc_states[(oldAB & 0x0f)];
 
         if (reading) {
-            Serial.print("Counter: ");
-            Serial.println(counter, DEC);
-            Serial.print("PINC:  ");
-            Serial.println(encoderBits);
             counter += reading;
         }
         return counter;

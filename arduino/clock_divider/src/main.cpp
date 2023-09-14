@@ -41,16 +41,8 @@ void setup() {
     TCCR1A = 0;
     TCCR1B = 0;
     TCCR1B |= (1 << WGM12); // CTC mode
-    OCR1A = 15624 / 8; // For 1 Hz at 16 MHz
-//    No prescaling (1): CS10 set, others unset
-//    8: CS11 set, others unset
-//    64: CS10 and CS11 set
-//    256: CS12 set, others unset
-//    1024: CS10 and CS12 set
-
+    OCR1A = 15624; // For 1 Hz at 16 MHz (1 pulse per second)
     TCCR1B |= (1 << CS10);  // No prescaling
-
-
     TCCR1B |= (1 << CS10) | (1 << CS12); // 1024 prescaler
     TIMSK1 |= (1 << OCIE1A); // enable timer compare interrupt
     sei();

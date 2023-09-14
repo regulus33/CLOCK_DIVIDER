@@ -65,7 +65,7 @@ public:
     void hardwareTest() {
         clear();
         printLine("Clawk");
-        delay(500);
+        delay(1);
         drawSplashCircles();
         printLine(255);
     }
@@ -77,25 +77,12 @@ public:
 private:
     void drawSplashCircles(void) {
         display.clearDisplay();
-
-        for(int16_t i=0; i<max(display.width(),display.height())/2; i+=2) {
-            display.drawCircle(display.width()/2, display.height()/2, i, WHITE);
-            display.display();
-            delay(1);
-        }
-
-        delay(500);
-
-        display.clearDisplay();
-
         for(int16_t i=max(display.width(),display.height())/2; i>0; i-=3) {
             // The INVERSE color is used so circles alternate white/black
             display.fillCircle(display.width() / 2, display.height() / 2, i, INVERSE);
             display.display(); // Update screen with each newly-drawn circle
-            delay(1);
+            delay(0.2);
         }
-
-        delay(500);
     }
 };
 

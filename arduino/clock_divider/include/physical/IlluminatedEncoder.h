@@ -45,25 +45,28 @@ public:
     /* ! in a perfect world this would be enforced by an interface. But we want to be fast */
     void hardWareTest() {
         yellow();
-        delay(100);
+        delay(1);
         green();
-        delay(100);
+        delay(1);
         red();
-        delay(100);
+        delay(1);
         kill();
-        delay(100);
+        delay(1);
     }
 
-    static unsigned int readEncoder(uint8_t encoderBits) {
+    static int readEncoder() {
         static int8_t enc_states[] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
-        static uint8_t oldAB = 0;
-        oldAB <<= 2;
-        oldAB |= (encoderBits & 0x03);
-        static uint8_t counter = 0;
-        int8_t reading = enc_states[(oldAB & 0x0f)];
+        static uint8_t old_AB = 0;
+        static uint8_t counter = 255;
+        int8_t tmpdata;
+        old_AB <<= 2;
+        old_AB |= ( PINC & 0x03 );
+        tmpdata = ( enc_states[( old_AB & 0x0f )]);
 
-        if (reading) {
-            counter += reading;
+        if( tmpdata ) {
+            Serial.print("Counter: ");
+            Serial.println(counter, DEC);
+            counter -= tmpdata;
         }
         return counter;
     }

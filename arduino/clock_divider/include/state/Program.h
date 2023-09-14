@@ -16,7 +16,7 @@ public:
     }
 
     void updateProgramState() {
-        encoderValue = IlluminatedEncoder::readEncoder(PINC);
+        encoderValue = IlluminatedEncoder::readEncoder();
     }
 
     uint8_t getEncoderValue() const {

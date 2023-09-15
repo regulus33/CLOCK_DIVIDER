@@ -15,8 +15,18 @@
 #include <Arduino.h>
 
 struct IlluminatedEncoder {
-
+    int beRed = 0;
 public:
+    void blink() {
+        if(beRed) {
+            red();
+            beRed = !beRed;
+        } else {
+            green();
+            beRed = !beRed;
+        }
+    }
+
     void setup() {
         initEncoder();
         initLED();
@@ -54,7 +64,7 @@ public:
         delay(1);
     }
 
-    static int readEncoder() {
+    int readEncoder() {
         static int8_t enc_states[] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
         static uint8_t old_AB = 0;
         static uint8_t counter = 255;

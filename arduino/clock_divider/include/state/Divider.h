@@ -7,11 +7,14 @@
 
 
 class Divider {
-public:
     int counter = 0;
-    int counterMax = 3;
+    int counterMax = 0;
+public:
+    void setDivision(int division) {
+        counterMax = division;
+    }
 
-    Divider(int division) { counterMax = division; }
+    Divider() { counterMax = 4; }
 
     int tick() {
         int tick = 0;

@@ -5,38 +5,51 @@
 #ifndef CLOCK_DIVIDER_JACKS_H
 #define CLOCK_DIVIDER_JACKS_H
 #include <Arduino.h>
-static const int numJacks = 4;  // Number of jacks
+#include "state/Divider.h"
+
+
+
+/*
+ * this class just represents the 4 output jacks at the top of the device
+ * it keeps the alignment of both the arrays and the buttons
+ */
 class Jacks {
 public:
-    static void setup() {
-        pinMode(8, OUTPUT);
-        pinMode(9, OUTPUT);
-        pinMode(10, OUTPUT);
-        pinMode(11, OUTPUT);
-        // low
-        digitalWrite(8, LOW);
-        digitalWrite(9, LOW);
-        digitalWrite(10, LOW);
+    static const int numJacks = 4;
+    const int jackIndexesToPins[numJacks] = {8,9,10,11};
+    void setup() {
+        for(int jackIndexesToPin : jackIndexesToPins) {
+            pinMode(jackIndexesToPin, OUTPUT);
+            digitalWrite(jackIndexesToPin, LOW);
+        }
         digitalWrite(11, LOW);
     }
 
-   static void pulse(int pin, bool up = true) {
+    void setDivision(int jackIndex, int division) {
+        dividers[jackIndex].setDivision(division);
+    }
+
+    void pulse(int jackIndex) {
+        if(!dividers[jackIndex].tick()) { return; }
+        int pin = jackIndexesToPins[jackIndex];
         if (pin < 8 || pin >= 12) {
             return;  // Invalid index
         }
-        // Get the pin corresponding to the index
-        int intensity = up ? HIGH : LOW;
-        digitalWrite(pin, intensity);
+        jackStates[jackIndex] = !jackStates[jackIndex];
+        digitalWrite(pin, jackStates[jackIndex]);
     }
 
-    static void hardwareTest() {
-        for(int i = 8; i < 12; i++) {
+    void hardwareTest() {
+        for(int i = 0; i < 4; i++) {
             pulse(i);
             delay(100);
-            pulse(i, false);
+            pulse(i);
             delay(100);
         }
     }
+private:
+    int jackStates[numJacks] = {LOW,LOW,LOW, LOW};
+    Divider dividers[numJacks];
 
 };
 #endif //CLOCK_DIVIDER_JACKS_H

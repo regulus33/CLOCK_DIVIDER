@@ -2,49 +2,26 @@
 #include "physical/IlluminatedEncoder.h"
 #include "physical/OledDisplay.h"
 #include "util/Macros.h"
-#include "ArduinoBuffer.h"
-#include "ArduinoClawk.h"
-#include "ArduinoOutput.h"
-#include "ArduinoConstants.h"
-#include "state/Program.h"
 #include "physical/Jacks.h"
 #include "state/Divider.h"
 
-Program program;
 IlluminatedEncoder encoder;
 OledDisplay display;
-Divider divider1(1);
-Divider divider2(2);
-Divider divider3(3);
-Divider divider4(4);
-
+Jacks jacks;
 
 volatile int encoderValue = 0;  // Your encoder value will go here.
-volatile bool toggle = false;
 volatile int lastEncoderValue = 255;
 int counter = 0;
 int counterMax = 3;
 
 void startupAnimate() {
-    program.updateProgramState();
     encoder.hardWareTest();
     display.hardwareTest();
-    Jacks::hardwareTest();
+    jacks.hardwareTest();
 }
 
-
-
-void setup() {
-    display.setup();
-    encoder.setup();
-    Jacks::setup();
-
-
-    // ==== Startup
-    //    startupAnimate();
-    // ==== Timer
-    // Initialize Timer1 for a 1 Hz frequency
-    // assuming a 16MHz clock
+/* No idea how this works :) */
+void initTimerInterrupt() {
     TCCR1A = 0;
     TCCR1B = 0;
     TCCR1B |= (1 << WGM12); // CTC mode
@@ -52,31 +29,42 @@ void setup() {
     TCCR1B |= (1 << CS10);  // No prescaling
     TCCR1B |= (1 << CS10) | (1 << CS12); // 1024 prescaler
     TIMSK1 |= (1 << OCIE1A); // enable timer compare interrupt
-    sei();
+    sei(); // enables global interrupts
 }
-void loop() {
-    encoderValue = IlluminatedEncoder::readEncoder();
+
+void setup() {
+    display.setup();
+    encoder.setup();
+    jacks.setup();
+    startupAnimate();
+    initTimerInterrupt();
+
+#ifdef DEBUG
+    Serial.begin(115200);
+#endif
+}
+
+void readAndPrintEncoderValue() {
+    encoderValue = encoder.readEncoder();
     if( lastEncoderValue != encoderValue) {
         display.printLine(encoderValue);
     }
     lastEncoderValue = encoderValue;
     counter = (counter + 1) % counterMax;
-
-    // Adjust these values to make the thing change frequency. if 0, on the right were 1000 for instance
-    // the max speed would decrease significantly.
-    OCR1A = map(encoderValue, 0, 255, 15624, 0); // change limits according to your needs
-#ifdef DEBUG
-
-#endif
 }
 
+void loop() {
+
+    readAndPrintEncoderValue();
+
+    OCR1A = map(encoderValue, 0, 255, 15624, 0); // change limits according to your needs
+
+}
+
+
 ISR(TIMER1_COMPA_vect) {
-    toggle = !toggle; // toggle state
-    divider1.tick();
-//    digitalWrite(TEST_PIN, toggle ? HIGH : LOW); // Generate the pulse
-    if(toggle) {
-        encoder.green();
-    } else {
-        encoder.red();
-    }
+   encoder.blink();
+   for(int i = 0; i < Jacks::numJacks; i++) {
+       jacks.pulse(i);
+   }
 }

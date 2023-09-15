@@ -8,19 +8,22 @@
 #include "ArduinoConstants.h"
 #include "state/Program.h"
 #include "physical/Jacks.h"
-#include "avr8-stub.h"
+#include "state/Divider.h"
 
 Program program;
 IlluminatedEncoder encoder;
 OledDisplay display;
-//Clawk clawk(7);
-
-#define TEST_PIN 8
+Divider divider1(1);
+Divider divider2(2);
+Divider divider3(3);
+Divider divider4(4);
 
 
 volatile int encoderValue = 0;  // Your encoder value will go here.
 volatile bool toggle = false;
-
+volatile int lastEncoderValue = 255;
+int counter = 0;
+int counterMax = 3;
 
 void startupAnimate() {
     program.updateProgramState();
@@ -29,12 +32,16 @@ void startupAnimate() {
     Jacks::hardwareTest();
 }
 
+
+
 void setup() {
     display.setup();
     encoder.setup();
     Jacks::setup();
+
+
     // ==== Startup
-    startupAnimate();
+    //    startupAnimate();
     // ==== Timer
     // Initialize Timer1 for a 1 Hz frequency
     // assuming a 16MHz clock
@@ -48,11 +55,16 @@ void setup() {
     sei();
 }
 void loop() {
-    int encVal = IlluminatedEncoder::readEncoder();
-    display.printLine(encVal);
+    encoderValue = IlluminatedEncoder::readEncoder();
+    if( lastEncoderValue != encoderValue) {
+        display.printLine(encoderValue);
+    }
+    lastEncoderValue = encoderValue;
+    counter = (counter + 1) % counterMax;
+
     // Adjust these values to make the thing change frequency. if 0, on the right were 1000 for instance
     // the max speed would decrease significantly.
-    OCR1A = map(encVal, 0, 255, 15624, 0); // change limits according to your needs
+    OCR1A = map(encoderValue, 0, 255, 15624, 0); // change limits according to your needs
 #ifdef DEBUG
 
 #endif
@@ -60,6 +72,7 @@ void loop() {
 
 ISR(TIMER1_COMPA_vect) {
     toggle = !toggle; // toggle state
+    divider1.tick();
 //    digitalWrite(TEST_PIN, toggle ? HIGH : LOW); // Generate the pulse
     if(toggle) {
         encoder.green();

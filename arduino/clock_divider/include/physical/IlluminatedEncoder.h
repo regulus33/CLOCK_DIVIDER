@@ -64,8 +64,6 @@ public:
         tmpdata = ( enc_states[( old_AB & 0x0f )]);
 
         if( tmpdata ) {
-            Serial.print("Counter: ");
-            Serial.println(counter, DEC);
             counter -= tmpdata;
         }
         return counter;

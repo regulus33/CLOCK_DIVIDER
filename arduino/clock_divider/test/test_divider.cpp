@@ -8,6 +8,11 @@
 #include "physical/IlluminatedEncoder.h"
 #include "state/Divider.h"
 
+void checkTick(int division, int* arr, int arrSize, Divider* d) {
+    for(int i = 0; i < arrSize; i++) {
+        TEST_ASSERT_EQUAL(d->tick(), arr[i]);
+    }
+}
 
 void test_div_2(void) {
     Divider divider = Divider(2);
@@ -61,4 +66,7 @@ void setup() {
 
     runUnityTests();
 }
-void loop() {}
+
+void loop() {
+
+}

@@ -10,6 +10,10 @@ OledDisplay display;
 ClockDividers dividers;
 Buttons buttons;
 
+/*
+ * Set function pointer for digitalRead
+ */
+int (*Button::digitalReadPtr)(uint8_t) = digitalRead;
 
 volatile int encoderValue = 0;  // we don't init with these, they are just to bust cache and read encoder.
 volatile int lastEncoderValue = 1;
@@ -60,14 +64,17 @@ void updateButtonStates() {
 }
 
 void applyButtonStatesToDividers() {
-    Button* buttonsArr = buttons.getButtons();
+    Button* buttonsArr = buttons.getButtonsArray();
    for(int i = 0; i < numButtons; i++) {
        bool pressed = buttonsArr[i].isPressed();
-       if(pressed) {
-//           dividers.updateDivision(0, 1);
-            display.printLine("Pressed");
-
+       if(i == 3) {
+           if(pressed) {
+               display.printLine("pressed");
+           } else {
+               display.printLine("not pressed");
+           }
        }
+
    }
 }
 

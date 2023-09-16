@@ -6,24 +6,23 @@
 #define CLOCK_DIVIDER_BUTTONS_H
 #include <Arduino.h>
 
-const int pins[4] = {7,6,5,13};
+const int pins[4] = {7,6,5,12};
 const int numButtons = 4;
+
 struct Button {
-    int pressed = 0;
+    int pressed = 1;
     int pin;
 public:
+    static int (*digitalReadPtr)(uint8_t);
+
     Button(int pin) : pin(pin) {}
-
-    int isPressed() {
-        return pressed;
-    }
-
-    void togglePressed() {
-        pressed = !pressed;
+    /*! NOTE: In arduino, the pushbutton is LOW when pressed and HIGH when left alone. */
+    int isPressed() const {
+        return !pressed;
     }
 
     void updateState() {
-        pressed = digitalRead(pin);
+        pressed = digitalReadPtr(pin);
     }
 };
 
@@ -37,12 +36,13 @@ public:
         }
     }
 
-    Button* getButtons() {
+    Button* getButtonsArray() {
         return buttons;
     }
 
     void updateStates() {
-        for(Button button : buttons) {
+        /* Don't forget that range based loops copy the arrays unless you & ref */
+        for(Button& button : buttons) {
             button.updateState();
         }
     }

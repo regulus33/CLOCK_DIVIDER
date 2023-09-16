@@ -2,21 +2,20 @@
 // Created by zack on 9/13/23.
 //
 
-#ifndef CLOCK_DIVIDER_JACKS_H
-#define CLOCK_DIVIDER_JACKS_H
+#ifndef CLOCK_DIVIDER_CLOCKDIVIDERS_H
+#define CLOCK_DIVIDER_CLOCKDIVIDERS_H
 #include <Arduino.h>
-#include "state/Divider.h"
-
-
+#include "state/Division.h"
 
 /*
  * this class just represents the 4 output jacks at the top of the device
  * it keeps the alignment of both the arrays and the buttons
  */
-class Jacks {
+class ClockDividers {
 public:
     static const int numJacks = 4;
     const int jackIndexesToPins[numJacks] = {8,9,10,11};
+
     void setup() {
         for(int jackIndexesToPin : jackIndexesToPins) {
             pinMode(jackIndexesToPin, OUTPUT);
@@ -25,7 +24,7 @@ public:
         digitalWrite(11, LOW);
     }
 
-    void setDivision(int jackIndex, int division) {
+    void updateDivision(int jackIndex, int division) {
         dividers[jackIndex].setDivision(division);
     }
 
@@ -49,7 +48,7 @@ public:
     }
 private:
     int jackStates[numJacks] = {LOW,LOW,LOW, LOW};
-    Divider dividers[numJacks];
+    Division dividers[numJacks];
 
 };
-#endif //CLOCK_DIVIDER_JACKS_H
+#endif //CLOCK_DIVIDER_CLOCKDIVIDERS_H

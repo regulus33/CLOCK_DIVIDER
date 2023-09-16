@@ -2,20 +2,22 @@
 #include "physical/IlluminatedEncoder.h"
 #include "physical/OledDisplay.h"
 #include "util/Macros.h"
-#include "physical/Jacks.h"
-#include "state/Divider.h"
+#include "state/ClockDividers.h"
+#include "physical/Buttons.h"
 
 IlluminatedEncoder encoder;
 OledDisplay display;
-Jacks jacks;
+ClockDividers dividers;
+Buttons buttons;
 
-volatile int encoderValue = 0;  // we don't init wuith these, they are just to bust cache and read encoder.
+
+volatile int encoderValue = 0;  // we don't init with these, they are just to bust cache and read encoder.
 volatile int lastEncoderValue = 1;
 
 void startupAnimate() {
     encoder.hardWareTest();
     display.hardwareTest();
-    jacks.hardwareTest();
+    dividers.hardwareTest();
 }
 
 /* No idea how this works :) */
@@ -33,7 +35,8 @@ void initTimerInterrupt() {
 void setup() {
     display.setup();
     encoder.setup();
-    jacks.setup();
+    dividers.setup();
+    buttons.setup();
     startupAnimate();
     initTimerInterrupt();
 
@@ -52,17 +55,34 @@ bool readAndPrintEncoderValue() {
     return valueChanged;
 }
 
+void updateButtonStates() {
+    buttons.updateStates();
+}
+
+void applyButtonStatesToDividers() {
+    Button* buttonsArr = buttons.getButtons();
+   for(int i = 0; i < numButtons; i++) {
+       bool pressed = buttonsArr[i].isPressed();
+       if(pressed) {
+//           dividers.updateDivision(0, 1);
+            display.printLine("Pressed");
+
+       }
+   }
+}
+
 void loop() {
+    updateButtonStates();
+    applyButtonStatesToDividers();
     bool valueChanged = readAndPrintEncoderValue();
     if(valueChanged) {
-//        OCR1A = map(encoderValue, 0, 255, 15624, 0); //0 is faster
         OCR1A = map(encoderValue, 0, 255, 500, 0);
     }
 }
 
 ISR(TIMER1_COMPA_vect) {
    encoder.blink();
-   for(int i = 0; i < Jacks::numJacks; i++) {
-       jacks.pulse(i);
+   for(int i = 0; i < ClockDividers::numJacks; i++) {
+       dividers.pulse(i);
    }
 }

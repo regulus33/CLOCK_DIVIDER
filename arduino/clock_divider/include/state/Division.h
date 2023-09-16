@@ -2,11 +2,11 @@
 // Created by zack on 9/15/23.
 //
 
-#ifndef CLOCK_DIVIDER_DIVIDER_H
-#define CLOCK_DIVIDER_DIVIDER_H
+#ifndef CLOCK_DIVIDER_DIVISION_H
+#define CLOCK_DIVIDER_DIVISION_H
 
 
-class Divider {
+class Division {
     int counter = 0;
     int counterMax = 0;
 public:
@@ -14,7 +14,7 @@ public:
         counterMax = division;
     }
 
-    Divider() { counterMax = 4; }
+    Division() { counterMax = 4; }
 
     int tick() {
         int tick = 0;
@@ -27,4 +27,4 @@ public:
 };
 
 
-#endif //CLOCK_DIVIDER_DIVIDER_H
+#endif //CLOCK_DIVIDER_DIVISION_H

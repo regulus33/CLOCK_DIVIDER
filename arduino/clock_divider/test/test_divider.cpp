@@ -6,7 +6,7 @@
 #include "ArduinoClawk.h"
 #include "Arduino.h"
 #include "physical/IlluminatedEncoder.h"
-#include "state/Divider.h"
+#include "state/Division.h"
 
 void checkTick(int division, int* arr, int arrSize, Divider* d) {
     for(int i = 0; i < arrSize; i++) {

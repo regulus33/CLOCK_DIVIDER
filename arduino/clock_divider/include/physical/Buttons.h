@@ -8,20 +8,30 @@
 
 const int pins[4] = {7,6,5,12};
 const int numButtons = 4;
-
+const int debounceDelay = 300;
 struct Button {
     int pressed = 1;
+    int lastPressedState = 0;
+    int d = millis();
     int pin;
 public:
     static int (*digitalReadPtr)(uint8_t);
 
     Button(int pin) : pin(pin) {}
     /*! NOTE: In arduino, the pushbutton is LOW when pressed and HIGH when left alone. */
-    int isPressed() const {
-        return !pressed;
+    int isPressed()  {
+        if(lastPressedState == pressed) {
+            return 0;
+        }
+        if(millis() - d > debounceDelay) {
+            d = millis();
+            return !pressed;
+        }
+        return 0;
     }
 
     void updateState() {
+        lastPressedState = pressed;
         pressed = digitalReadPtr(pin);
     }
 };

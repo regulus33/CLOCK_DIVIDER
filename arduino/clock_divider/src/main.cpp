@@ -2,12 +2,13 @@
 #include "physical/IlluminatedEncoder.h"
 #include "physical/OledDisplay.h"
 #include "util/Macros.h"
-#include "state/ClockDividers.h"
+#include "state/OutputManager.h"
 #include "physical/Buttons.h"
+
 
 IlluminatedEncoder encoder;
 OledDisplay display;
-ClockDividers dividers;
+OutputManager outputManager;
 Buttons buttons;
 
 /*
@@ -21,8 +22,9 @@ volatile int lastEncoderValue = 1;
 void startupAnimate() {
     encoder.hardWareTest();
     display.hardwareTest();
-    dividers.hardwareTest();
+    outputManager.hardwareTest();
 }
+
 
 /* No idea how this works :) */
 void initTimerInterrupt() {
@@ -39,20 +41,20 @@ void initTimerInterrupt() {
 void setup() {
     display.setup();
     encoder.setup();
-    dividers.setup();
+    outputManager.setup();
     buttons.setup();
     startupAnimate();
     initTimerInterrupt();
-
+    Serial.begin(31250); // Standard MIDI Baud rate
 #ifdef DEBUG
-    Serial.begin(115200);
+//    Serial.begin(115200);
 #endif
 }
 
 bool readAndPrintEncoderValue() {
     encoderValue = encoder.readEncoder();
     bool valueChanged = lastEncoderValue != encoderValue;
-    if(valueChanged) {
+    if (valueChanged) {
         display.printLine(encoderValue);
     }
     lastEncoderValue = encoderValue;
@@ -64,32 +66,32 @@ void updateButtonStates() {
 }
 
 void applyButtonStatesToDividers() {
-    Button* buttonsArr = buttons.getButtonsArray();
-   for(int i = 0; i < numButtons; i++) {
-       bool pressed = buttonsArr[i].isPressed();
-       if(i == 3) {
-           if(pressed) {
-               display.printLine("pressed");
-           } else {
-               display.printLine("not pressed");
-           }
-       }
-
-   }
+    Button *buttonsArr = buttons.getButtonsArray();
+    for (int i = 0; i < numButtons; i++) {
+        bool pressed = buttonsArr[i].isPressed();
+        if (pressed) {
+            display.printLine(outputManager.incrementDivision(i));
+            outputManager.resetState();
+        }
+    }
 }
 
 void loop() {
     updateButtonStates();
     applyButtonStatesToDividers();
+
     bool valueChanged = readAndPrintEncoderValue();
-    if(valueChanged) {
-        OCR1A = map(encoderValue, 0, 255, 500, 0);
+    if (valueChanged) {
+        OCR1A = map(encoderValue, 0, 255, 1000, 0);
+//        outputManager.resetState();
     }
 }
 
 ISR(TIMER1_COMPA_vect) {
-   encoder.blink();
-   for(int i = 0; i < ClockDividers::numJacks; i++) {
-       dividers.pulse(i);
-   }
+    encoder.blink();
+    Serial.write(0xF8);
+    for (int i = 0; i < OutputManager::numJacks; i++) {
+        Serial.write(0xF8); // Send the MIDI clock byte
+        outputManager.pulse(i);
+    }
 }

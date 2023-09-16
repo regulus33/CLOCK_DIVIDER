@@ -67,7 +67,7 @@ public:
     int readEncoder() {
         static int8_t enc_states[] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
         static uint8_t old_AB = 0;
-        static uint8_t counter = 255;
+        static uint8_t counter = 130;
         int8_t tmpdata;
         old_AB <<= 2;
         old_AB |= ( PINC & 0x03 );

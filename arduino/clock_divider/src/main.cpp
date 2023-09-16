@@ -9,10 +9,8 @@ IlluminatedEncoder encoder;
 OledDisplay display;
 Jacks jacks;
 
-volatile int encoderValue = 0;  // Your encoder value will go here.
-volatile int lastEncoderValue = 255;
-int counter = 0;
-int counterMax = 3;
+volatile int encoderValue = 0;  // we don't init wuith these, they are just to bust cache and read encoder.
+volatile int lastEncoderValue = 1;
 
 void startupAnimate() {
     encoder.hardWareTest();
@@ -44,23 +42,23 @@ void setup() {
 #endif
 }
 
-void readAndPrintEncoderValue() {
+bool readAndPrintEncoderValue() {
     encoderValue = encoder.readEncoder();
-    if( lastEncoderValue != encoderValue) {
+    bool valueChanged = lastEncoderValue != encoderValue;
+    if(valueChanged) {
         display.printLine(encoderValue);
     }
     lastEncoderValue = encoderValue;
-    counter = (counter + 1) % counterMax;
+    return valueChanged;
 }
 
 void loop() {
-
-    readAndPrintEncoderValue();
-
-    OCR1A = map(encoderValue, 0, 255, 15624, 0); // change limits according to your needs
-
+    bool valueChanged = readAndPrintEncoderValue();
+    if(valueChanged) {
+//        OCR1A = map(encoderValue, 0, 255, 15624, 0); //0 is faster
+        OCR1A = map(encoderValue, 0, 255, 500, 0);
+    }
 }
-
 
 ISR(TIMER1_COMPA_vect) {
    encoder.blink();

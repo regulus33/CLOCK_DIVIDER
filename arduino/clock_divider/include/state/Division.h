@@ -28,6 +28,10 @@ public:
         return divisions[divIndex];
     }
 
+    void setDivision(int division) {
+        divIndex = division - 1;
+    }
+
     int tick() {
         int tick = 0;
         if (counter % divs[divIndex] == 0) {

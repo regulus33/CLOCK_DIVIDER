@@ -1,9 +1,30 @@
+/**
+* Blink with debugger
+*/
+// #include "Arduino.h"
+// #include "avr8-stub.h"
+// #include "app_api.h" // only needed with flash breakpoints
+// void setup()
+// {
+//  pinMode(LED_BUILTIN, OUTPUT);
+//  // initialize the avr-debugger
+//  debug_init();
+// }
+// void loop()
+// {
+//  digitalWrite(LED_BUILTIN, HIGH);
+//  delay(300);
+//  digitalWrite(LED_BUILTIN, LOW);
+//  delay(100);
+// }
+
 #include <Arduino.h>
 #include "physical/IlluminatedEncoder.h"
 #include "physical/OledDisplay.h"
 #include "util/Macros.h"
 #include "state/OutputManager.h"
 #include "physical/Buttons.h"
+#include "avr8-stub.h"
 
 
 IlluminatedEncoder encoder;
@@ -43,19 +64,16 @@ void setup() {
     encoder.setup();
     outputManager.setup();
     buttons.setup();
-    startupAnimate();
+//    startupAnimate();
     initTimerInterrupt();
-    Serial.begin(31250); // Standard MIDI Baud rate
-#ifdef DEBUG
-//    Serial.begin(115200);
-#endif
 }
 
 bool readAndPrintEncoderValue() {
-    encoderValue = encoder.readEncoder();
+    encoderValue = map(encoder.readEncoder(), 1023, 0, 10, 180);
     bool valueChanged = lastEncoderValue != encoderValue;
     if (valueChanged) {
         display.printLine(encoderValue);
+        OCR1A = encoderValue;
     }
     lastEncoderValue = encoderValue;
     return valueChanged;
@@ -79,19 +97,12 @@ void applyButtonStatesToDividers() {
 void loop() {
     updateButtonStates();
     applyButtonStatesToDividers();
-
-    bool valueChanged = readAndPrintEncoderValue();
-    if (valueChanged) {
-        OCR1A = map(encoderValue, 0, 255, 1000, 0);
-//        outputManager.resetState();
-    }
+    readAndPrintEncoderValue();
 }
 
 ISR(TIMER1_COMPA_vect) {
     encoder.blink();
-    Serial.write(0xF8);
     for (int i = 0; i < OutputManager::numJacks; i++) {
-        Serial.write(0xF8); // Send the MIDI clock byte
         outputManager.pulse(i);
     }
 }

@@ -18,7 +18,7 @@ struct IlluminatedEncoder {
     int beRed = 0;
 public:
     void blink() {
-        if(beRed) {
+        if (beRed) {
             red();
             beRed = !beRed;
         } else {
@@ -65,19 +65,9 @@ public:
     }
 
     int readEncoder() {
-        static int8_t enc_states[] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
-        static uint8_t old_AB = 0;
-        static uint8_t counter = 130;
-        int8_t tmpdata;
-        old_AB <<= 2;
-        old_AB |= ( PINC & 0x03 );
-        tmpdata = ( enc_states[( old_AB & 0x0f )]);
-
-        if( tmpdata ) {
-            counter -= tmpdata;
-        }
-        return counter;
+        return analogRead(A0);
     }
+
 private:
     void initLED() {
         pinMode(RED, OUTPUT);

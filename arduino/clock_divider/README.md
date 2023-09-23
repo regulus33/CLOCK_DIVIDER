@@ -86,3 +86,12 @@ Size: Typically much larger than SRAM. An Arduino Uno has 32KB of flash memory.
 Analogue in a traditional computer: Flash memory on a microcontroller is somewhat similar to the hard drive or SSD on a traditional computer, where the operating system and programs are stored. The key difference is that hard drives and SSDs on a computer are much larger and can be read and written to more flexibly than the flash memory on a microcontroller.
 
 In summary, SRAM is like the "working memory" that is fast but volatile and limited in size, while flash memory is more like "storage" that is slower but non-volatile and more abundant.
+
+
+
+# Debugger HELL
+
+First I had to replace the built in platform io avr-gdb with my own brew version
+`/Users/zack/.platformio/packages/toolchain-atmelavr/bin`
+`cp /usr/local/bin/avr-gdb avr-gdb`
+

@@ -4,35 +4,43 @@
 
 #ifndef CLOCK_DIVIDER_BUTTONS_H
 #define CLOCK_DIVIDER_BUTTONS_H
+
 #include <Arduino.h>
 
-const int pins[4] = {7,6,5,12};
+const int pins[4] = {7, 6, 5, 12};
 const int numButtons = 4;
-const int debounceDelay = 300;
+const int debounceDelay = 200;
+
 struct Button {
-    int pressed = 1;
-    int lastPressedState = 0;
-    int d = millis();
+    bool pressed = false;
+    bool wasPressedLastTime = false;
+    int timeLastPressed = 0;
     int pin;
 public:
     static int (*digitalReadPtr)(uint8_t);
 
     Button(int pin) : pin(pin) {}
-    /*! NOTE: In arduino, the pushbutton is LOW when pressed and HIGH when left alone. */
-    int isPressed()  {
-        if(lastPressedState == pressed) {
-            return 0;
+
+    /*! NOTE: In arduino, the pushbutton is LOW when pressed and HIGH when left alone. ®®®®R*/
+    bool isPressed() {
+        int now = millis();
+        if(pressed && (now - timeLastPressed) > debounceDelay) {
+            if(!wasPressedLastTime) {
+                timeLastPressed = now;
+                wasPressedLastTime = true;
+                return true;
+
+            }
+
+
         }
-        if(millis() - d > debounceDelay) {
-            d = millis();
-            return !pressed;
-        }
-        return 0;
+        wasPressedLastTime = false;
+        return false;
     }
 
     void updateState() {
-        lastPressedState = pressed;
-        pressed = digitalReadPtr(pin);
+        int pinRead = digitalRead(pin);
+        pressed = pinRead == LOW;
     }
 };
 
@@ -41,18 +49,18 @@ class Buttons {
 
 public:
     void setup() {
-        for(int pin : pins) {
+        for (int pin: pins) {
             pinMode(pin, INPUT_PULLUP);
         }
     }
 
-    Button* getButtonsArray() {
+    Button *getButtonsArray() {
         return buttons;
     }
 
     void updateStates() {
         /* Don't forget that range based loops copy the arrays unless you & ref */
-        for(Button& button : buttons) {
+        for (Button &button: buttons) {
             button.updateState();
         }
     }

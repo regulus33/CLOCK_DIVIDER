@@ -10,7 +10,7 @@
 //  // initialize the avr-debugger
 //  debug_init();
 // }
-// void loop()
+// void loop()\
 // {
 //  digitalWrite(LED_BUILTIN, HIGH);
 //  delay(300);
@@ -21,7 +21,6 @@
 #include <Arduino.h>
 #include "physical/IlluminatedEncoder.h"
 #include "physical/OledDisplay.h"
-#include "util/Macros.h"
 #include "state/OutputManager.h"
 #include "physical/Buttons.h"
 #include "avr8-stub.h"
